@@ -8,6 +8,7 @@
 
 * Run bower: `bower install`
 * Run npm install: `npm install`
+* Run `sudo npm install -g gulp` if you don't have gulp installed
 * Run gulp: `gulp`
 
 Then go to [http://localhost:8080](http://localhost:8080).
