@@ -9,3 +9,7 @@
 * Run bower: `bower install`
 * Run npm install: `npm install`
 * Run gulp: `gulp`
+
+Then go to [http://localhost:8080](http://localhost:8080).
+
+The ./dist/ directory is deployable.

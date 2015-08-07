@@ -7,11 +7,17 @@ var sass   = require('gulp-sass');
 var connect = require('gulp-connect');
 
 var paths = {
-    html:    ['./**/*.html'],
-    scripts: ['src/js/**/*.js'],
-    styles:  ['src/sass/main.scss'],
-    images:  ['src/img/**/*']
+    html:    ['./src/**/*.html'],
+    scripts: ['./src/js/**/*.js'],
+    styles:  ['./src/sass/main.scss'],
+    images:  ['./src/img/**/*']
 };
+
+// clean dist folder
+gulp.task('clean:dist', function(){
+    return gulp.src(['dist'], {read:false})
+        .pipe(clean());
+});
 
 // clean bower components
 gulp.task('clean:components', function(){
@@ -38,18 +44,18 @@ gulp.task('images', ['clean:images'], function(){
         './src/img/**/*'
     ])
         .pipe(gulp.dest('dist/img'))
-        .pipe(connect.reload());;
+        .pipe(connect.reload());
 });
 
-gulp.task('scripts', function() {
+gulp.task('scripts', ['clean:dist'], function() {
     return gulp.src(paths.scripts)
         .pipe(uglify())
         .pipe(concat('main.min.js'))
         .pipe(gulp.dest('dist/js'))
-        .pipe(connect.reload());;
+        .pipe(connect.reload());
 });
 
-gulp.task('styles', function() {
+gulp.task('styles', ['clean:dist'], function() {
     return gulp.src(paths.styles)
         .pipe(sass({outputStyle: 'compressed'}))
         .pipe(gulp.dest('dist/css'))
@@ -58,12 +64,22 @@ gulp.task('styles', function() {
 
 gulp.task('html', function() {
     return gulp.src(paths.html)
-        .pipe(connect.reload());;
+        .pipe(gulp.dest('dist'))
+        .pipe(connect.reload());
 });
 
-gulp.task('connect', function() {
+gulp.task('dist', ['clean:dist'], function(){
+    return gulp.src([
+        './src/**/*',
+        '!./src/sass/**/*',
+        '!./src/js/**/*'
+    ])
+        .pipe(gulp.dest('dist'));
+});
+
+gulp.task('connect', ['dist'], function() {
     connect.server({
-        root: './',
+        root: './dist/',
         livereload: true
     });
 });
@@ -82,6 +98,7 @@ gulp.task('default', [
     'images',
     'scripts',
     'styles',
+    'dist',
     'connect',
     'watch'
 ]);
