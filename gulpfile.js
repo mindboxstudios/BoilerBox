@@ -9,45 +9,55 @@ var connect = require('gulp-connect');
 var paths = {
     html:    ['./src/**/*.html'],
     scripts: ['./src/js/**/*.js'],
-    styles:  ['./src/sass/main.scss'],
+    styles:  ['./src/sass/**/*.scss'],
     images:  ['./src/img/**/*']
 };
 
-// clean dist folder
+// Clean dist/
 gulp.task('clean:dist', function(){
     return gulp.src(['dist'], {read:false})
         .pipe(clean());
 });
 
-// clean bower components
+// Clean bower_components in dist/lib/
 gulp.task('clean:components', function(){
     return gulp.src(['dist/lib/'], {read:false})
         .pipe(clean());
 });
 
-// clean images
+// Clean dist/img/
 gulp.task('clean:images', function(){
     return gulp.src(['dist/img/'], {read:false})
         .pipe(clean());
 });
 
-//
-gulp.task('components', ['clean:components'], function(){
-    gulp.src([
-        './bower_components/**/*'
-    ])
+// Clean dist/js/
+gulp.task('clean:js', function(){
+    return gulp.src(['dist/js/'], {read:false})
+        .pipe(clean());
+});
+
+// Clean dist/css/
+gulp.task('clean:css', function(){
+    return gulp.src(['dist/css/'], {read:false})
+        .pipe(clean());
+});
+
+// move bower components to dist/lib
+gulp.task('components', function(){
+    gulp.src(['./bower_components/**/*'])
         .pipe(gulp.dest('dist/lib'));
 });
 
+// Copy images to dist/img/
 gulp.task('images', ['clean:images'], function(){
-    gulp.src([
-        './src/img/**/*'
-    ])
+    gulp.src(['./src/img/**/*'])
         .pipe(gulp.dest('dist/img'))
         .pipe(connect.reload());
 });
 
-gulp.task('scripts', ['clean:dist'], function() {
+// Uglify, concat, and copy js to dist/js/
+gulp.task('scripts', ['clean:js'], function() {
     return gulp.src(paths.scripts)
         .pipe(uglify())
         .pipe(concat('main.min.js'))
@@ -55,20 +65,23 @@ gulp.task('scripts', ['clean:dist'], function() {
         .pipe(connect.reload());
 });
 
-gulp.task('styles', ['clean:dist'], function() {
+// Compile sass, compress output, and copy to dist/css/
+gulp.task('styles', ['clean:css'], function() {
     return gulp.src(paths.styles)
         .pipe(sass({outputStyle: 'compressed'}))
         .pipe(gulp.dest('dist/css'))
-        .pipe(connect.reload());;
+        .pipe(connect.reload());
 });
 
+// Copy all html to dist/
 gulp.task('html', function() {
     return gulp.src(paths.html)
         .pipe(gulp.dest('dist'))
         .pipe(connect.reload());
 });
 
-gulp.task('dist', ['clean:dist'], function(){
+// Copy everything from src except uncompiled sass and js
+gulp.task('dist', function(){
     return gulp.src([
         './src/**/*',
         '!./src/sass/**/*',
@@ -77,7 +90,8 @@ gulp.task('dist', ['clean:dist'], function(){
         .pipe(gulp.dest('dist'));
 });
 
-gulp.task('connect', ['dist'], function() {
+// Start server, livereload in dist/ as root
+gulp.task('connect', function() {
     connect.server({
         root: './dist/',
         livereload: true
@@ -94,10 +108,12 @@ gulp.task('watch', function() {
 
 // The default task (called when you run `gulp` from cli)
 gulp.task('default', [
+    'clean:dist',
     'components',
     'images',
     'scripts',
     'styles',
+    'html',
     'dist',
     'connect',
     'watch'
