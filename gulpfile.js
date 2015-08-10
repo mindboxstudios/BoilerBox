@@ -13,12 +13,6 @@ var paths = {
     images:  ['./src/img/**/*']
 };
 
-// Clean dist/
-gulp.task('clean:dist', function(){
-    return gulp.src(['dist'], {read:false})
-        .pipe(clean());
-});
-
 // Clean bower_components in dist/lib/
 gulp.task('clean:components', function(){
     return gulp.src(['dist/lib/'], {read:false})
@@ -100,21 +94,20 @@ gulp.task('connect', function() {
 
 // Rerun the task when a file changes
 gulp.task('watch', function() {
-    gulp.watch(paths.html, ['html']);
-    gulp.watch(paths.scripts, ['scripts']);
-    gulp.watch(paths.styles, ['styles']);
-    gulp.watch(paths.images, ['images']);
+    gulp.watch(paths.html, ['html', 'dist']);
+    gulp.watch(paths.scripts, ['scripts', 'dist']);
+    gulp.watch(paths.styles, ['styles', 'dist']);
+    gulp.watch(paths.images, ['images', 'dist']);
 });
 
 // The default task (called when you run `gulp` from cli)
 gulp.task('default', [
-    'clean:dist',
+    'dist',
     'components',
     'images',
     'scripts',
     'styles',
     'html',
-    'dist',
     'connect',
     'watch'
 ]);
