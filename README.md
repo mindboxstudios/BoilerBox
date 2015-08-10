@@ -6,7 +6,7 @@
 
 ## Getting Started
 
-* Run bower: `bower install`
+* Make sure [bower](https://github.com/bower/bower) is installed
 * Run npm install: `npm install`
 * Run `sudo npm install -g gulp` if you don't have gulp installed
 * Run gulp: `gulp`
