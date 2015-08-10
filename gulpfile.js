@@ -4,6 +4,7 @@ var clean  = require('gulp-clean');
 var concat = require('gulp-concat');
 var uglify = require('gulp-uglify');
 var sass   = require('gulp-sass');
+var watch  = require('gulp-watch');
 var connect = require('gulp-connect');
 
 var paths = {
@@ -94,10 +95,21 @@ gulp.task('connect', function() {
 
 // Rerun the task when a file changes
 gulp.task('watch', function() {
-    gulp.watch(paths.html, ['html', 'dist']);
-    gulp.watch(paths.scripts, ['scripts', 'dist']);
-    gulp.watch(paths.styles, ['styles', 'dist']);
-    gulp.watch(paths.images, ['images', 'dist']);
+    watch(paths.html, function() {
+        gulp.start('html', 'dist');
+    });
+
+    watch(paths.scripts, function() {
+        gulp.start('scripts', 'dist');
+    });
+
+    watch(paths.styles, function() {
+        gulp.start('styles', 'dist');
+    });
+
+    watch(paths.images, function() {
+        gulp.start('images', 'dist');
+    });
 });
 
 // The default task (called when you run `gulp` from cli)
