@@ -4,6 +4,7 @@
   "description": "Mindbox Studios' static site dev kit",
   "main": "index.html",
   "scripts": {
+    "preinstall": "bower install",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
