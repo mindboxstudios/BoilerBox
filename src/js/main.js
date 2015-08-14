@@ -1,3 +1,9 @@
 // main.js
+(function($, window, document, undefined) {
+    'use strict';
 
-console.log('hello');
+    $(function() {
+        console.log('hello');
+    });
+
+})(jQuery, window, document);
